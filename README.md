@@ -52,31 +52,39 @@ Any of these modules may be dropped if desired.
 Obtaining Tags
 ---------------
 
+```
 `ID3.loadTags(url, [options])`
     `url` - The URL of the mp3 file to read, this must reside on the same domain (document.domain).
     `options` - Optional parameters.
     `options.tags` - The array of tags and/or shortcuts to read from the ID3 block. Default value is: `["title", "artist", "album", "track"]`
     `options.dataReader` - The function used to create the data reader out of a url. It receives (`url`, `success`: callback function that returns the data reader, `fail`: callback function to inform an error setting up the reader).
-
+```
+    
 In order to use this version of the Javascript ID3 Reader, you must first ensure that a dataReader module is available. By default by upload and ajax dataReaders are present.
 
 At present, the ajax dataReader requires that you simply specify the URL you wish to download. It will then download as much of the URL as is neccessary to read the ID3 tags. E.g.:
+```
 `ID3.loadTags('http://www.example.com/music.mp3', { tags : ["title", "artist", "album"] })`
+```
 
 The upload dataReader, on the other hand, requires that you pass a file object as such:
+```
 `ID3.loadTags('the-url-is-really-just-a-placeholder-for-uploads', { dataReader : FileAPIReader(f), tags : ["title", "artist", "album"] })`
-
+```
 
 
 Whenever tags have been read, a custom event, "ID3TagsRead", will be issued, with its data being the tags obtained. Additionally, the getAllTags function can also be used on any unique URL provided if the tags for that URL have been read:
+```
 `ID3.getAllTags(url)`
     `url` - The URL of the mp3 file to read, this must be the same value given to `ID3.loadTags()`.
     `return value` - The tags obtained.
+```
 
 
 Tag Formats
 ------------
 Tag formats vary. The ID3v1 tags are:
+```
     {
         version: "1.1",
         title: string,
@@ -87,9 +95,10 @@ Tag formats vary. The ID3v1 tags are:
         track: string,
         genre: string
     }
-
+```
     
 For ID3v2:
+```
     {
         version: "2.<major>.<revision>",
         major: integer,
@@ -108,9 +117,11 @@ For ID3v2:
         },
         <shortcut>*: pointer to <frame id>.data
     }
+```
 
     
 For AAC:
+```
     {
         album: string,
         artist: string,
@@ -130,6 +141,7 @@ For AAC:
         lyrics: string,
         genre: string
     }
+```
 
 ### Currently supported frames on ID3:
 
