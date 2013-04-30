@@ -1,23 +1,38 @@
 JavaScript ID3 Reader
 =====================
 
-This library was originally made by Jacob Seidelin using ID3v1 for demo'ing his BinaryAjax library [http://www.nihilogic.dk/labs/id3/].
-It was then extended by me (António Afonso) to include the ID3v2 tag specification [http://www.id3.org/id3v2.4.0-structure], while I was working at Opera Software, in the context of the Unite Media Player application which was developed using server side JavaScript.
-Joshua Kifer implemented the tag reader for the QuickTime metadata information found in aac files.
-A new BufferedBinaryFile was created that extends BinaryFile in a way that only required data will be downloaded from the server. This makes it possible to read tag structures such as the Quicktime metadata without having to download the entire file as it was happening in previous versions of this library.
+This library attempts to parse ID3 tag data in music files using Javascript.
 
-Demo: http://www.aadsm.net/libraries/id3/#demo
+* It library was originally made by Jacob Seidelin using ID3v1 for demo'ing his BinaryAjax library [http://www.nihilogic.dk/labs/id3/].
+* It was then extended by António Afonso to include the ID3v2 tag specification [http://www.id3.org/id3v2.4.0-structure], while he was working at Opera Software, in the context of the Unite Media Player application which was developed using server side JavaScript.
+* Joshua Kifer implemented the tag reader for the QuickTime metadata information found in aac files.
+* A new BufferedBinaryFile was created that extends BinaryFile in a way that only required data will be downloaded from the server. This makes it possible to read tag structures such as the Quicktime metadata without having to download the entire file as it was happening in previous versions of this library.
 
-Technical Information
+Finally, the current version includes modifications by Joseph T. Parsons.
+
+Fork Changes
+-------------------
+This fork has implemented the following features:
+* Replace the callback function with events.
+
+Additional plans include:
+* Remove platform-specific code from modules (that should be included in a compatibility later, at least for this fork, since it reduces maintainability costs).
+* FLAC support (...somehow I'll figure that out).
+* MP4 support (just ID3, but will need to be tested)
+
+Other Work
 ---------------------
+
+This fork will eventually try to merge changes by other contributors, as they are made. These include:
+* Charset support (latin1, UTF-8, and UTF-16 are currently supported). This work is ongoing by [chardet](http://github.com/aadsm/jschardet), and will be merged into this fork with time.
+* CommonJS support (maybe?)
+
+Technical Details
+------------------
 
 This library will only download the relevant data from the mp3 file whenever the webserver supports the HTTP Range feature, otherwise the entire file will be downloaded at the cost of degrading the performance of the library.
 Another caveat is on the Opera browser, since it lacks support for setting the Range header, the entire file will be downloaded.
 This library is not complete and there is still some features missing and/or going on:
-
-* Unsynchronisation support
-* CommonJS support
-* Support for other types of charsets, at the moment only latin1, UTF-8 and UTF-16 are supported, these are the ones defined in the specification. However, the usage of local charsets has been common for a long time specially in Russia, Japan and China. This support can be achieved using [chardet](http://github.com/aadsm/jschardet) and a proper string reader function.
 
 How To Use It
 -------------
@@ -141,3 +156,4 @@ Authors
 * Jacob Seidelin
 * António Afonso
 * Joshua Kifer
+* Joseph T. Parsons
