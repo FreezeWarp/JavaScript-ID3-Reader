@@ -102,7 +102,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
   this.getStringAt = function(iOffset, iLength) {
     var aStr = [];
     
-    for (var i=iOffset,j=0;i<iOffset+iLength;i++,j++) {
+    for (var i = iOffset, j = 0; i < iOffset + iLength; i++, j++) {
       aStr[j] = String.fromCharCode(this.getByteAt(i));
     }
     

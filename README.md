@@ -1,28 +1,32 @@
 JavaScript ID3 Reader
 =====================
 
+Note: This fork is still being developed. Do not use it yet, please.
+
+
 This library attempts to parse ID3 tag data in music files using Javascript.
 
 * It library was originally made by Jacob Seidelin using ID3v1 for demo'ing his BinaryAjax library [http://www.nihilogic.dk/labs/id3/].
 * It was then extended by António Afonso to include the ID3v2 tag specification [http://www.id3.org/id3v2.4.0-structure], while he was working at Opera Software, in the context of the Unite Media Player application which was developed using server side JavaScript.
 * Joshua Kifer implemented the tag reader for the QuickTime metadata information found in aac files.
 * A new BufferedBinaryFile was created that extends BinaryFile in a way that only required data will be downloaded from the server. This makes it possible to read tag structures such as the Quicktime metadata without having to download the entire file as it was happening in previous versions of this library.
-
-Finally, the current version includes modifications by Joseph T. Parsons.
+* Finally, the current version includes modifications by Joseph T. Parsons.
 
 Fork Changes
 -------------------
-This fork has implemented the following features:
+The following changes have been made in this fork:
 * Replace the callback function with events.
+* Remove platform-specific code from modules (that should be included in a compatibility later, at least for this fork, since it reduces maintainability costs).
 
 Additional plans include:
-* Remove platform-specific code from modules (that should be included in a compatibility later, at least for this fork, since it reduces maintainability costs).
-* Optimise the Performance of the Binary Functions
+* Binary function optimisation.
 * FLAC support (...somehow I'll figure that out).
 * MP4 support (just ID3, but will need to be tested)
 
-On the other hand, this fork specifically wishes to keep certain adventageous features:
+The following existing features will not be changed:
 * The modularity of the ID3 library will be kept and, hopefully, extended.
+* ID3v1, ID3v2.2, ID3v2.3 support
+* Upload and AJAX helpers.
 
 Other Work
 ---------------------
@@ -31,22 +35,29 @@ This fork will eventually try to merge changes by other contributors, as they ar
 * Charset support (latin1, UTF-8, and UTF-16 are currently supported). This work is ongoing by [chardet](http://github.com/aadsm/jschardet), and will be merged into this fork with time.
 * CommonJS support (maybe?)
 
-Technical Details
-------------------
+Modules
+---------
 
-This library will only download the relevant data from the mp3 file whenever the webserver supports the HTTP Range feature, otherwise the entire file will be downloaded at the cost of degrading the performance of the library.
-Another caveat is on the Opera browser, since it lacks support for setting the Range header, the entire file will be downloaded.
-This library is not complete and there is still some features missing and/or going on:
+The software is modular, and comes with the following modules by default:
+* id3v1.js - ID3v1.
+* id3v2.js - ID3v2.
+* id3v2frames.js - Frames support in ID3v2.
+* id4.js - Experimental m4a/m4v support.
+
+* filereader.js - Load files using upload.
+* ajaxreader.js - Load files using AJAX.
+
+Any of these modules may be dropped if desired.
 
 Documentation
 -------------
 
-The fork streamlines the syntax used for reading files. In general, loadTags is the only function that will be called:
+The fork streamlines the syntax used for reading files. In general, loadTags is the only function that will need to be called:
 `ID3.loadTags(url, [options])`
     `url` - The URL of the mp3 file to read, this must reside on the same domain (document.domain).
     `options` - Optional parameters.
     `options.tags` - The array of tags and/or shortcuts to read from the ID3 block. Default value is: `["title", "artist", "album", "track"]`
-    `options.dataReader` - The function used to create the data reader out of a url. It receives (`url`, `success`: callback function that returns the data reader, `fail`: callback function to inform an error setting up the reader). By default it will be BufferedBinaryAjax.
+    `options.dataReader` - The function used to create the data reader out of a url. It receives (`url`, `success`: callback function that returns the data reader, `fail`: callback function to inform an error setting up the reader).
     
 Whenever tags have been read, a custom event, "ID3TagsRead", will be issued, with its data being the tags obtained. Additionally, the getAllTags function can also be used on a unique URL, if the tags for that URL have been read:
 `ID3.getAllTags(url)`

@@ -68,9 +68,9 @@
           
           var id3Event = new CustomEvent(
             "ID3ReadFinish", {
-            detail: tags,
-            bubbles: true,
-            cancelable: true
+              detail: tags,
+              bubbles: true,
+              cancelable: true
             }
           );
           window.dispatchEvent(id3Event);
