@@ -20,6 +20,9 @@ Additional plans include:
 * FLAC support (...somehow I'll figure that out).
 * MP4 support (just ID3, but will need to be tested)
 
+On the other hand, this fork specifically wishes to keep certain adventageous features:
+* The modularity of the ID3 library will be kept and, hopefully, extended.
+
 Other Work
 ---------------------
 
