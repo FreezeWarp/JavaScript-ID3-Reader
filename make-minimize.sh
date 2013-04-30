@@ -4,6 +4,7 @@ java -jar "$CLOSURE_COMPILER" \
     --compilation_level ADVANCED_OPTIMIZATIONS \
     --js src/binaryfile.js \
     --js src/stringutils.js \
+    --js src/ajaxreader.js \
     --js src/filereader.js \
     --js src/id3.js \
     --js src/id3v1.js \
