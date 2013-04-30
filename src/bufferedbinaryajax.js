@@ -295,6 +295,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         if (iShort < 0) iShort += 65536;
         return iShort;
     };
+    
     this.getSShortAt = function(iOffset, bBigEndian) {
         var iUShort = this.getShortAt(iOffset, bBigEndian);
         if (iUShort > 32767)
@@ -302,6 +303,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         else
             return iUShort;
     };
+    
     this.getLongAt = function(iOffset, bBigEndian) {
         var iByte1 = this.getByteAt(iOffset),
             iByte2 = this.getByteAt(iOffset + 1),
@@ -314,6 +316,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         if (iLong < 0) iLong += 4294967296;
         return iLong;
     };
+    
     this.getSLongAt = function(iOffset, bBigEndian) {
         var iULong = this.getLongAt(iOffset, bBigEndian);
         if (iULong > 2147483647)
@@ -321,6 +324,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         else
             return iULong;
     };
+    
     // @aadsm
     this.getInteger24At = function(iOffset, bBigEndian) {
         var iByte1 = this.getByteAt(iOffset),
@@ -333,6 +337,7 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         if (iInteger < 0) iInteger += 16777216;
         return iInteger;
     };
+    
     this.getStringAt = function(iOffset, iLength) {
         var aStr = [];
         for (var i=iOffset,j=0;i<iOffset+iLength;i++,j++) {
@@ -340,15 +345,14 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         }
         return aStr.join("");
     };
+    
     // @aadsm
     this.getStringWithCharsetAt = function(iOffset, iLength, iCharset) {
         var bytes = this.getBytesAt(iOffset, iLength);
         var sString;
         
         switch( iCharset.toLowerCase() ) {
-            case 'utf-16':
-            case 'utf-16le':
-            case 'utf-16be':
+            case 'utf-16': case 'utf-16le': case 'utf-16be':
                 sString = StringUtils.readUTF16String(bytes, iCharset);
                 break;
                 
@@ -367,9 +371,11 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
     this.getCharAt = function(iOffset) {
         return String.fromCharCode(this.getByteAt(iOffset));
     };
+    
     this.toBase64 = function() {
         return window.btoa(data);
     };
+    
     this.fromBase64 = function(strBase64) {
         data = window.atob(strBase64);
     };

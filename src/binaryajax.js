@@ -53,6 +53,7 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
         if (iShort < 0) iShort += 65536;
         return iShort;
     }
+    
     this.getSShortAt = function(iOffset, bBigEndian) {
         var iUShort = this.getShortAt(iOffset, bBigEndian);
         if (iUShort > 32767)
@@ -60,6 +61,7 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
         else
             return iUShort;
     }
+    
     this.getLongAt = function(iOffset, bBigEndian) {
         var iByte1 = this.getByteAt(iOffset),
             iByte2 = this.getByteAt(iOffset + 1),
@@ -72,6 +74,7 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
         if (iLong < 0) iLong += 4294967296;
         return iLong;
     }
+    
     this.getSLongAt = function(iOffset, bBigEndian) {
         var iULong = this.getLongAt(iOffset, bBigEndian);
         if (iULong > 2147483647)
@@ -79,6 +82,7 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
         else
             return iULong;
     }
+    
     // @aadsm
     this.getInteger24At = function(iOffset, bBigEndian) {
         var iByte1 = this.getByteAt(iOffset),
@@ -98,15 +102,14 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
         }
         return aStr.join("");
     }
+    
     // @aadsm
     this.getStringWithCharsetAt = function(iOffset, iLength, iCharset) {
         var bytes = this.getBytesAt(iOffset, iLength);
         var sString;
         
         switch( iCharset.toLowerCase() ) {
-            case 'utf-16':
-            case 'utf-16le':
-            case 'utf-16be':
+            case 'utf-16': case 'utf-16le': case 'utf-16be':
                 sString = StringUtils.readUTF16String(bytes, iCharset);
                 break;
                 
@@ -125,9 +128,11 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
     this.getCharAt = function(iOffset) {
         return String.fromCharCode(this.getByteAt(iOffset));
     }
+    
     this.toBase64 = function() {
         return window.btoa(data);
     }
+    
     this.fromBase64 = function(strBase64) {
         data = window.atob(strBase64);
     }
@@ -173,60 +178,57 @@ var BinaryAjax = (function() {
     }
 
     function sendRequest(strURL, fncCallback, fncError, aRange, bAcceptRanges, iFileSize) {
-        var oHTTP = createRequest();
-        if (oHTTP) {
+        var oHTTP = createRequest(),
+          iDataOffset = 0,
+          iDataLen = 0;
+          
+        if (aRange && !bAcceptRanges) {
+          iDataOffset = aRange[0];
+        }
+        
+        if (aRange) {
+            iDataLen = aRange[1]-aRange[0]+1;
+        }
 
-            var iDataOffset = 0;
-            if (aRange && !bAcceptRanges) {
-                iDataOffset = aRange[0];
-            }
-            var iDataLen = 0;
-            if (aRange) {
-                iDataLen = aRange[1]-aRange[0]+1;
-            }
+        if (fncCallback) {
+            if (typeof(oHTTP.onload) != "undefined") {
+                oHTTP.onload = function() {
 
-            if (fncCallback) {
-                if (typeof(oHTTP.onload) != "undefined") {
-                    oHTTP.onload = function() {
-
+                    if (oHTTP.status == "200" || oHTTP.status == "206") {
+                        this.binaryResponse = new BinaryFile(this.responseText, iDataOffset, iDataLen);
+                        this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
+                        fncCallback(this);
+                    } else {
+                        if (fncError) fncError();
+                    }
+                    oHTTP = null;
+                };
+            } else {
+                oHTTP.onreadystatechange = function() {
+                    if (oHTTP.readyState == 4) {
                         if (oHTTP.status == "200" || oHTTP.status == "206") {
-                            this.binaryResponse = new BinaryFile(this.responseText, iDataOffset, iDataLen);
+                            this.binaryResponse = new BinaryFile(oHTTP.responseBody, iDataOffset, iDataLen);
                             this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
                             fncCallback(this);
                         } else {
                             if (fncError) fncError();
                         }
                         oHTTP = null;
-                    };
-                } else {
-                    oHTTP.onreadystatechange = function() {
-                        if (oHTTP.readyState == 4) {
-                            if (oHTTP.status == "200" || oHTTP.status == "206") {
-                                this.binaryResponse = new BinaryFile(oHTTP.responseBody, iDataOffset, iDataLen);
-                                this.fileSize = iFileSize || this.getResponseHeader("Content-Length");
-                                fncCallback(this);
-                            } else {
-                                if (fncError) fncError();
-                            }
-                            oHTTP = null;
-                        }
-                    };
-                }
+                    }
+                };
             }
-            oHTTP.open("GET", strURL, true);
-
-            if (oHTTP.overrideMimeType) oHTTP.overrideMimeType('text/plain; charset=x-user-defined');
-
-            if (aRange && bAcceptRanges) {
-                oHTTP.setRequestHeader("Range", "bytes=" + aRange[0] + "-" + aRange[1]);
-            }
-
-            oHTTP.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
-
-            oHTTP.send(null);
-        } else {
-            if (fncError) fncError();
         }
+        oHTTP.open("GET", strURL, true);
+
+        if (oHTTP.overrideMimeType) oHTTP.overrideMimeType('text/plain; charset=x-user-defined');
+
+        if (aRange && bAcceptRanges) {
+            oHTTP.setRequestHeader("Range", "bytes=" + aRange[0] + "-" + aRange[1]);
+        }
+
+        oHTTP.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
+
+        oHTTP.send(null);
     }
 
     return function(strURL, fncCallback, fncError, aRange) {
