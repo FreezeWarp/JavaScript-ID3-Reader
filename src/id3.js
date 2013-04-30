@@ -44,10 +44,9 @@
 
     /**
      * @param {string} url The location of the sound file to read.
-     * @param {function()} cb The callback function to be invoked when all tags have been read.
      * @param {{tags: Array.<string>, dataReader: function(string, function(BinaryReader))}} options The set of options that can specify the tags to be read and the dataReader to use in order to read the file located at url.
      */
-    ID3.loadTags = function(url, cb, options) {
+    ID3.loadTags = function(url, options) {
         options = options || {};
         var dataReader = options["dataReader"] || BufferedBinaryAjax;
         
@@ -56,8 +55,15 @@
             data.loadRange(_formatIDRange, function() {
                 var reader = getTagReader(data);
                 reader.loadData(data, function() {
-                    readTags(reader, data, url, options["tags"]);
-                    if( cb ) cb();
+                    tags = readTags(reader, data, url, options["tags"]);
+                    
+                    new CustomEvent(
+                      "ID3ReadFinish", {
+                        detail: tags,
+                        bubbles: true,
+                        cancelable: true
+                    }
+                  );
                 });
             });
         });     
