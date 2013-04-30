@@ -17,6 +17,7 @@ This fork has implemented the following features:
 
 Additional plans include:
 * Remove platform-specific code from modules (that should be included in a compatibility later, at least for this fork, since it reduces maintainability costs).
+* Optimise the Performance of the Binary Functions
 * FLAC support (...somehow I'll figure that out).
 * MP4 support (just ID3, but will need to be tested)
 
