@@ -8,11 +8,9 @@
  */
 
 (function(ns) {
-    var ID3 = ns.ID3 = {};
-    
-    var _files = {};
-    // location of the format identifier
-    var _formatIDRange = [0, 7];
+    var ID3 = ns.ID3 = {},
+      _files = {},
+      _formatIDRange = [0, 7]; // location of the format identifier
     
     /**
      * Finds out the tag format of this data and returns the appropriate

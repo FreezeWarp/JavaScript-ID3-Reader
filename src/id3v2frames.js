@@ -2,7 +2,7 @@
  * Copyright (c) 2009 Opera Software ASA, António Afonso (antonio.afonso@opera.com)
  * Modified by António Afonso <antonio.afonso gmail.com>
  */
-(function() {
+(function(ns) {
     var pictureType = [
         "32x32 pixels 'file icon' (PNG only)",
         "Other file icon",
