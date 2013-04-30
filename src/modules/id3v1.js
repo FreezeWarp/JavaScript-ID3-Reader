@@ -9,29 +9,35 @@
 
 (function(ns) {
   var ID3v1 = ns.ID3v1 = {};
+  
+  // http://axon.cs.byu.edu/~adam/gatheredinfo/organizedtables/musicgenrelist.php
   var genres = [
-    "Blues", "Classic Rock", "Country", "Dance", "Disco", "Funk", "Grunge", 
-    "Hip-Hop", "Jazz", "Metal", "New Age", "Oldies", "Other", "Pop", "R&B", 
-    "Rap", "Reggae", "Rock", "Techno", "Industrial", "Alternative", "Ska", 
-    "Death Metal", "Pranks", "Soundtrack", "Euro-Techno", "Ambient", 
-    "Trip-Hop", "Vocal", "Jazz+Funk", "Fusion", "Trance", "Classical", 
-    "Instrumental", "Acid", "House", "Game", "Sound Clip", "Gospel", 
-    "Noise", "AlternRock", "Bass", "Soul", "Punk", "Space", "Meditative", 
-    "Instrumental Pop", "Instrumental Rock", "Ethnic", "Gothic", 
-    "Darkwave", "Techno-Industrial", "Electronic", "Pop-Folk", 
-    "Eurodance", "Dream", "Southern Rock", "Comedy", "Cult", "Gangsta", 
-    "Top 40", "Christian Rap", "Pop/Funk", "Jungle", "Native American", 
-    "Cabaret", "New Wave", "Psychadelic", "Rave", "Showtunes", "Trailer", 
-    "Lo-Fi", "Tribal", "Acid Punk", "Acid Jazz", "Polka", "Retro", 
-    "Musical", "Rock & Roll", "Hard Rock", "Folk", "Folk-Rock", 
-    "National Folk", "Swing", "Fast Fusion", "Bebob", "Latin", "Revival", 
-    "Celtic", "Bluegrass", "Avantgarde", "Gothic Rock", "Progressive Rock", 
-    "Psychedelic Rock", "Symphonic Rock", "Slow Rock", "Big Band", 
-    "Chorus", "Easy Listening", "Acoustic", "Humour", "Speech", "Chanson", 
-    "Opera", "Chamber Music", "Sonata", "Symphony", "Booty Bass", "Primus", 
-    "Porn Groove", "Satire", "Slow Jam", "Club", "Tango", "Samba", 
-    "Folklore", "Ballad", "Power Ballad", "Rhythmic Soul", "Freestyle", 
-    "Duet", "Punk Rock", "Drum Solo", "Acapella", "Euro-House", "Dance Hall"
+    // Primary
+    'Blues', 'Classic Rock', 'Country', 'Dance', 'Disco', 'Funk', 'Grunge', 
+    'Hip-Hop', 'Jazz', 'Metal', 'New Age', 'Oldies', 'Other', 'Pop', 'R&B', 
+    'Rap', 'Reggae', 'Rock', 'Techno', 'Industrial', 'Alternative', 'Ska', 
+    'Death Metal', 'Pranks', 'Soundtrack', 'Euro-Techno', 'Ambient', 
+    'Trip-Hop', 'Vocal', 'Jazz+Funk', 'Fusion', 'Trance', 'Classical', 
+    'Instrumental', 'Acid', 'House', 'Game', 'Sound Clip', 'Gospel', 
+    'Noise', 'AlternRock', 'Bass', 'Soul', 'Punk', 'Space', 'Meditative', 
+    'Instrumental Pop', 'Instrumental Rock', 'Ethnic', 'Gothic', 
+    'Darkwave', 'Techno-Industrial', 'Electronic', 'Pop-Folk', 
+    'Eurodance', 'Dream', 'Southern Rock', 'Comedy', 'Cult', 'Gangsta', 
+    'Top 40', 'Christian Rap', 'Pop/Funk', 'Jungle', 'Native American', 
+    'Cabaret', 'New Wave', 'Psychadelic', 'Rave', 'Showtunes', 'Trailer', 
+    'Lo-Fi', 'Tribal', 'Acid Punk', 'Acid Jazz', 'Polka', 'Retro', 
+    'Musical', 'Rock & Roll', 'Hard Rock',
+ 
+    // Extended
+    'Folk', 'Folk-Rock', 
+    'National Folk', 'Swing', 'Fast Fusion', 'Bebob', 'Latin', 'Revival', 
+    'Celtic', 'Bluegrass', 'Avantgarde', 'Gothic Rock', 'Progressive Rock', 
+    'Psychedelic Rock', 'Symphonic Rock', 'Slow Rock', 'Big Band', 
+    'Chorus', 'Easy Listening', 'Acoustic', 'Humour', 'Speech', 'Chanson', 
+    'Opera', 'Chamber Music', 'Sonata', 'Symphony', 'Booty Bass', 'Primus', 
+    'Porn Groove', 'Satire', 'Slow Jam', 'Club', 'Tango', 'Samba', 
+    'Folklore', 'Ballad', 'Power Ballad', 'Rhythmic Soul', 'Freestyle', 
+    'Duet', 'Punk Rock', 'Drum Solo', 'Acapella', 'Euro-House', 'Dance Hall'
   ];
 
   ID3v1.loadData = function(data, callback) {
@@ -45,6 +51,7 @@
       header = data.getStringAt(offset, 3);
     
     if (header == "TAG") {
+      // http://id3.org/ID3v1
       var title = data.getStringAt(offset + 3, 30).replace(/\0/g, ""),
         artist = data.getStringAt(offset + 33, 30).replace(/\0/g, ""),
         album = data.getStringAt(offset + 63, 30).replace(/\0/g, ""),
@@ -56,15 +63,15 @@
         track = (trackFlag == 0 ? data.getByteAt(offset + 97 + 29) : 0);
         
       return {
-        "format" : "id3v1",
-        "version" : '1.1',
-        "title" : title,
-        "artist" : artist,
-        "album" : album,
-        "year" : year,
-        "comment" : comment,
-        "track" : track,
-        "genre" : genre
+        'format' : 'id3v1',
+        'version' : '1.1',
+        'title' : title,
+        'artist' : artist,
+        'album' : album,
+        'year' : year,
+        'comment' : comment,
+        'track' : track,
+        'genre' : genre
       }
     }
     else {
