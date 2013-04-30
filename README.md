@@ -38,34 +38,6 @@ This library will only download the relevant data from the mp3 file whenever the
 Another caveat is on the Opera browser, since it lacks support for setting the Range header, the entire file will be downloaded.
 This library is not complete and there is still some features missing and/or going on:
 
-How To Use It
--------------
-
-In its simplest form:
-```
-ID3.loadTags("filename.mp3", function() {
-    var tags = ID3.getAllTags(filename);
-    alert(tags.artist + " - " + tags.title + ", " + tags.album);
-});
-```
-
-by specifying specific tags:
-```
-ID3.loadTags("filename.mp3", function() {
-    var tags = ID3.getAllTags(filename);
-    alert(tags.COMM.data + " - " + tags.TCON.data + ", " + tags.WXXX.data);
-},
-{tags: ["COMM", "TCON", "WXXX"]});
-```
-
-or even by specifying shortcuts instead of cryptic tags:
-```
-ID3.loadTags("filename.mp3", function() {
-    var tags = ID3.getAllTags(filename);
-    alert(tags.comment + " - " + tags.track + ", " + tags.lyrics);
-},
-{tags: ["comment", "track", "lyrics"]});
-```
 Documentation
 -------------
 
