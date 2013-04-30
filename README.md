@@ -69,17 +69,19 @@ ID3.loadTags("filename.mp3", function() {
 Documentation
 -------------
 
-`ID3.loadTags(url, cb, [options])`
+The fork streamlines the syntax used for reading files. In general, loadTags is the only function that will be called:
+`ID3.loadTags(url, [options])`
     `url` - The URL of the mp3 file to read, this must reside on the same domain (document.domain).
-    `cb` - The callback function to invoke when the tags are loaded.
     `options` - Optional parameters.
     `options.tags` - The array of tags and/or shortcuts to read from the ID3 block. Default value is: `["title", "artist", "album", "track"]`
     `options.dataReader` - The function used to create the data reader out of a url. It receives (`url`, `success`: callback function that returns the data reader, `fail`: callback function to inform an error setting up the reader). By default it will be BufferedBinaryAjax.
-
+    
+Whenever tags have been read, a custom event, "ID3TagsRead", will be issued, with its data being the tags obtained. Additionally, the getAllTags function can also be used on a unique URL, if the tags for that URL have been read:
 `ID3.getAllTags(url)`
     `url` - The URL of the mp3 file to read, this must be the same value given to `ID3.loadTags()`.
-    `return value` - This function will return the following object structure, for IDv1:
+    `return value` - The tags obtained.
 
+Tag formats vary. The ID3v1 tags are:
     {
         version: "1.1",
         title: string,
@@ -90,7 +92,8 @@ Documentation
         track: string,
         genre: string
     }
-for ID3v2:
+
+For ID3v2:
 
     {
         version: "2.<major>.<revision>",
@@ -111,7 +114,7 @@ for ID3v2:
         <shortcut>*: pointer to <frame id>.data
     }
 
-for AAC:
+For AAC:
 
     {
         album: string,
