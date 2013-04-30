@@ -24,14 +24,22 @@
                (data.getStringAt(0, 3) == "ID3" ? ID3v2 : ID3v1);
     }
     
+    /**
+     * @param object reader - The fileReader object, which must contain the readTagsFromData method.
+     * @param object data
+     * @param string url
+     * @param array tags
+     */
     function readTags(reader, data, url, tags) {
         var tagsFound = reader.readTagsFromData(data, tags);
         //console.log("Downloaded data: " + data.getDownloadedBytesCount() + "bytes");
         var tags = _files[url] || {};
-        for( var tag in tagsFound ) if( tagsFound.hasOwnProperty(tag) ) {
-            tags[tag] = tagsFound[tag];
+        
+        for( var tag in tagsFound ) {
+          if( tagsFound.hasOwnProperty(tag) ) tags[tag] = tagsFound[tag];
         }
-        _files[url] = tags;
+        
+        return _files[url] = tags;
     }
 
     ID3.clearTags = function(url) {
@@ -43,6 +51,8 @@
     };
 
     /**
+     * Load a file into memory and scan its tags.
+     * 
      * @param {string} url The location of the sound file to read.
      * @param {{tags: Array.<string>, dataReader: function(string, function(BinaryReader))}} options The set of options that can specify the tags to be read and the dataReader to use in order to read the file located at url.
      */
@@ -57,13 +67,14 @@
                 reader.loadData(data, function() {
                     tags = readTags(reader, data, url, options["tags"]);
                     
-                    new CustomEvent(
+                    var id3Event = new CustomEvent(
                       "ID3ReadFinish", {
                         detail: tags,
                         bubbles: true,
                         cancelable: true
-                    }
-                  );
+                      }
+                    );
+                    window.dispatchEvent(id3Event);
                 });
             });
         });     
