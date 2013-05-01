@@ -7,7 +7,7 @@
  * Modified by António Afonso <antonio.afonso gmail.com>
  */
 
-tagReader = {
+tagsReader = {
   /////////////////
   /// Variables ///
   /////////////////
@@ -26,14 +26,14 @@ tagReader = {
    * Returns information for the last error encountered by the library. The function will return previous errors if called more than once.
    */
   getLastError : function() {
-    tagReader._errors.pop();
+    tagsReader._errors.pop();
   },
   
   /*
    * Throws an error.
    */
   _throwError : function(errorString) {
-    tagReader._errors.push(errorString);
+    tagsReader._errors.push(errorString);
   },
   
   
@@ -42,7 +42,42 @@ tagReader = {
   ///////////////////
   /// File Reader ///
   ///////////////////
-  fileReader : {},
+  dataReader : {
+    // upload, ajax
+  },
+  
+  
+  
+  
+  //////////////////
+  /// Tag Reader ///
+  //////////////////  
+  /**
+  * Finds out the tag format of this data and returns the appropriate reader.
+  * @todo improve this detection according to the spec
+  */
+  getFormat : function(data) {
+    if (data.getStringAt(4, 7) === 'ftypM4A') {
+      return 'id4';
+    }
+    
+    else if (data.getStringAt(0, 3) === 'ID3') {
+      return 'id3v2';
+    }
+    
+    else {
+      return 'id3v1';
+    }
+  },
+    
+  
+  formatReader : {
+    
+    id4 : false,
+    id3v1 : false,
+    id3v2 : false,
+    
+  },
   
   
   
@@ -51,15 +86,6 @@ tagReader = {
   ////////////////////
   /// Analyse Tags ///
   ////////////////////
-  /**
-   * Finds out the tag format of this data and returns the appropriate
-   * reader.
-   */
-  getTagReader : function(data) {
-    // FIXME: improve this detection according to the spec
-    return data.getStringAt(4, 7) == "ftypM4A" ? ID4 :
-         (data.getStringAt(0, 3) == "ID3" ? ID3v2 : ID3v1);
-  },
   
   /**
    * Load a file into memory and scan its tags.
@@ -68,7 +94,7 @@ tagReader = {
    * @param {{tags: Array.<string>, dataReader: function(string, function(BinaryReader))}} options The set of options that can specify the tags to be read and the dataReader to use in order to read the file located at url.
    */
   loadTags : function(url, options) {
-    var dataReader = options["dataReader"] || BufferedBinaryAjax,
+    var dataReader = options.dataReader,
       id3StartEvent = new CustomEvent(
         "ID3ReadStart", {
           detail: url
@@ -79,15 +105,28 @@ tagReader = {
       
     options = options || {};
     
+    if (typeof dataReader !== 'object') {
+      tagsReader._throwError('A valid dataReader was not passed.'); 
+      return false;
+    }
+    
     window.dispatchEvent(id3StartEvent);
     
     dataReader(url, function(data) {
       data.loadRange(fileReader._formatIDRange, function() { // preload the format identifier
-        var formatReader = getTagReader(data);
+        var format = getTagReader(data),
+          formatReader;
+        
+                     
+        if (typeof tagsReader.formatReader[format] !== '') {
+          tagsReader._throwError('The format speciifed is not supported.'); 
+          return false;
+        }
+        
         
         formatReader.loadData(data, function() {
           var tagsFound = reader.readTagsFromData(data, options["tags"]),
-            returnTags = tagReader.files[url] || {};
+            returnTags = tagsReader.files[url] || {};
           
           //console.log("Downloaded data: " + data.getDownloadedBytesCount() + "bytes");
           
@@ -120,8 +159,8 @@ tagReader = {
    * The internal logic of this function ensures that a tag is either a number or string. Any other value is rejected.
    */
   tagExists : function(url, tags) {
-    if (typeof fileReader.files[url][tags] === 'number'
-      || typeof fileReader.files[url][tags] === 'string') return true; 
+    if (typeof tagsReader.files[url][tags] === 'number'
+      || typeof tagsReader.files[url][tags] === 'string') return true; 
     else return false;
   },
   
