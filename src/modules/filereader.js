@@ -4,16 +4,17 @@
  *
  */
 
-(function(ns) {
-    ns["FileAPIReader"] = function(file) {
-        return function(url, fncCallback, fncError) {
-            var reader = new FileReader();
+(function(tagsReader) {
+  tagsReader.dataReader['upload'] = function(file) {
+    return function(url, fncCallback, fncError) {
+      var reader = new FileReader();
 
-            reader.onload = function(event) {
-                var result = event.target.result;
-                fncCallback(new BinaryFile(result));
-            };
-            reader.readAsBinaryString(file);
-        }
-    };
-})(this);
+      reader.onload = function(event) {
+        var result = event.target.result;
+        fncCallback(new BinaryFile(result));
+      };
+      
+      reader.readAsBinaryString(file);
+    }
+  }
+})(tagsReader);
