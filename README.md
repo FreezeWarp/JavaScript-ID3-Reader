@@ -17,6 +17,8 @@ Fork Changes
 The following changes have been made in this fork:
 * Replace the callback function with events.
 * Remove platform-specific code from modules (that should be included in a compatibility later, at least for this fork, since it reduces maintainability costs).
+* Simplify methods.
+* Conform to (subjectively) better standards and readability (object model, etc.)
 
 Additional plans include:
 * Binary function optimisation.
