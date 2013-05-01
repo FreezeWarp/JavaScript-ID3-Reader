@@ -30,9 +30,6 @@ The following existing features will not be changed:
 * ID3v1, ID3v2.2, ID3v2.3 support
 * Upload and AJAX helpers.
 
-Other Work
----------------------
-
 This fork will eventually try to merge changes by other contributors, as they are made. These include:
 * Charset support (latin1, UTF-8, and UTF-16 are currently supported). This work is ongoing by [chardet](http://github.com/aadsm/jschardet), and will be merged into this fork with time.
 * CommonJS support (maybe?)
@@ -45,11 +42,19 @@ The software is modular, and comes with the following modules by default:
 * id3v2.js - ID3v2.
 * id3v2frames.js - Frames support in ID3v2.
 * id4.js - Experimental m4a/m4v support.
-
 * filereader.js - Load files using upload.
 * ajaxreader.js - Load files using AJAX.
 
 Any of these modules may be dropped if desired.
+
+Converting to the Fork
+----------------------
+Presently, adopters are recommended to stick with the code available from António Afonso. The following changes are required to move to the new library:
+* For most applications, users should use the id3-full.js library. Advanced users, however, may wish to compile the library seperately, only using the choosen extensions.
+* Callback functions are no longer used for receiving the results of 
+* Support for older browsers must be achieved using shims.
+
+In general, existing users will unlikely gain from such a migration, but new users (especially those developing heavily HTML5 applications) will found these changes beneficial.
 
 Obtaining Tags
 ---------------
