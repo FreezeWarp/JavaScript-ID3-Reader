@@ -6,7 +6,7 @@
  * Extended by António Afonso (antonio.afonso@opera.com), Opera Software ASA
  * Modified by António Afonso <antonio.afonso gmail.com>
  * 
- * Modifications by Joseph Parsons <josephtparsons@gmail.com> (c) 2013, released under MIT license [http://www.opensource.org/licenses/mit-license.php].
+ * Modified by Joseph Parsons <josephtparsons@gmail.com>, 2013. Changes released under MIT license.
  */
 
 tagsReader = {
@@ -77,7 +77,7 @@ tagsReader = {
     
     id4 : false,
     id3v1 : false,
-    id3v2 : false,
+    id3v2 : false
     
   },
   
@@ -102,7 +102,6 @@ tagsReader = {
           detail: url
         }
       ),
-      id3FinishEvent,
       reader;
       
     options = options || {};
@@ -124,11 +123,15 @@ tagsReader = {
           tagsReader._throwError('The format speciifed is not supported.'); 
           return false;
         }
+        else {
+          formatReader = tagsReader.formatReader[format];
+        }
         
         
         formatReader.loadData(data, function() {
-          var tagsFound = reader.readTagsFromData(data, options["tags"]),
-            returnTags = tagsReader.files[url] || {};
+          var tagsFound = formatReader.readTagsFromData(data, options["tags"]),
+            returnTags = tagsReader.files[url] || {},
+            id3FinishEvent;
           
           //console.log("Downloaded data: " + data.getDownloadedBytesCount() + "bytes");
           
@@ -136,14 +139,14 @@ tagsReader = {
             if (tagsFound.hasOwnProperty(tag)) returnTags[tag] = tagsFound[tag];
           }
           
-          return fileReader.files[url] = returnTags;
-          
           id3FinishEvent = new CustomEvent(
             "ID3ReadFinish", {
               detail: tags
             }
           );
           window.dispatchEvent(id3Event);
+          
+          return fileReader.files[url] = returnTags;
         });
       });
     });   

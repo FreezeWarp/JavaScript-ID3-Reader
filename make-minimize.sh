@@ -11,6 +11,13 @@ java -jar "$CLOSURE_COMPILER" \
     --js src/modules/id3v2.js \
     --js src/modules/id3v2frames.js \
     --js src/modules/id4.js \
-> dist/id3-minimized.js
+> dist/id3-full.js
+
+java -jar "$CLOSURE_COMPILER" \
+    --compilation_level ADVANCED_OPTIMIZATIONS \
+    --js src/binaryfile.js \
+    --js src/stringutils.js \
+    --js src/id3.js \
+> dist/id3-core.js
 
 #--formatting PRETTY_PRINT \

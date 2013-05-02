@@ -157,7 +157,7 @@
         descriptor : descriptor.toString(),
         lyrics : lyrics.toString()
       };
-    };
+    }
   }
   
   tagsReader.formatReader.id3v2.readFrameData['COM'] = tagsReader.formatReader.id3v2.readFrameData['COMM'];

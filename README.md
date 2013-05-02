@@ -17,18 +17,15 @@ Fork Changes
 The following changes have been made in this fork:
 * Replace the callback function with events.
 * Remove platform-specific code from modules (that should be included in a compatibility later, at least for this fork, since it reduces maintainability costs).
+* "Modularise" all non-essential code. This was already basically done but id3.js did not detect changes automatically.
 * Simplify methods.
 * Conform to (subjectively) better standards and readability (object model, etc.)
 
 Additional plans include:
-* Binary function optimisation.
+* Binary function optimisation. (Actively developed code would be better, since the current functions are developed solely by António Afonso.)
 * FLAC support (...somehow I'll figure that out).
+* OGG support (...and that).
 * MP4 support (just ID3, but will need to be tested)
-
-The following existing features will not be changed:
-* The modularity of the ID3 library will be kept and, hopefully, extended.
-* ID3v1, ID3v2.2, ID3v2.3 support
-* Upload and AJAX helpers.
 
 This fork will eventually try to merge changes by other contributors, as they are made. These include:
 * Charset support (latin1, UTF-8, and UTF-16 are currently supported). This work is ongoing by [chardet](http://github.com/aadsm/jschardet), and will be merged into this fork with time.
