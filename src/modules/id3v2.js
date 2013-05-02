@@ -167,7 +167,7 @@
       var tags = [];
 
       for (var i = 0, shortcut; shortcut = shortcuts[i]; i++) {
-        tags = tags.concat(_shortcuts[shortcut]||[shortcut]);
+        tags = tags.concat(tagsReader.formatReader.id3v2._shortcuts[shortcut]||[shortcut]);
       }
 
       return tags;
@@ -215,7 +215,7 @@
         frameDataSize,
         major = id3header["major"];
       
-      tags = getTagsFromShortcuts(tags || _defaultShortcuts);
+      tags = getTagsFromShortcuts(tags || tagsReader.formatReader.id3v2._defaultShortcuts);
       
       while (offset < end) {
         var readFrameFunc = null,
@@ -265,21 +265,21 @@
         }
                 
         // find frame parsing function
-        if (frameID in ID3v2.readFrameData) {
-          readFrameFunc = ID3v2.readFrameData[frameID];
+        if (frameID in tagsReader.formatReader.id3v2.readFrameData) {
+          readFrameFunc = tagsReader.formatReader.id3v2.readFrameData[frameID];
         }
         else if (frameID[0] == "T") {
-          readFrameFunc = ID3v2.readFrameData["T*"];
+          readFrameFunc = tagsReader.formatReader.id3v2.readFrameData["T*"];
         }
         
         var parsedData = readFrameFunc ? readFrameFunc(frameDataOffset, frameSize, frameData, flags) : undefined;
-        var desc = frameID in ID3v2.frames ? ID3v2.frames[frameID] : 'Unknown';
+        var desc = frameID in tagsReader.formatReader.id3v2.frames ? tagsReader.formatReader.id3v2.frames[frameID] : 'Unknown';
       
         var frame = {
-          id      : frameID,
-          size    : frameSize,
+          id          : frameID,
+          size        : frameSize,
           description : desc,
-          data    : parsedData
+          data        : parsedData
         };
       
         if (frameID in frames) {
@@ -342,9 +342,9 @@
         frames = unsynch ? {} : readFrames(offset, size-10, data, id3, tags);
       
       // create shortcuts for most common data
-      for (var name in _shortcuts) {
-        if (_shortcuts.hasOwnProperty(name)) {
-          var data = getFrameData(frames, _shortcuts[name]);
+      for (var name in tagsReader.formatReader.id3v2._shortcuts) {
+        if (tagsReader.formatReader.id3v2._shortcuts.hasOwnProperty(name)) {
+          var data = getFrameData(frames, tagsReader.formatReader.id3v2._shortcuts[name]);
 
           if (data) id3[name] = data;
         }
