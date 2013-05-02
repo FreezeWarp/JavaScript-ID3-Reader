@@ -5,6 +5,8 @@
  * 
  * Extended by António Afonso (antonio.afonso@opera.com), Opera Software ASA
  * Modified by António Afonso <antonio.afonso gmail.com>
+ * 
+ * Modified by Joseph Parsons <josephtparsons@gmail.com>, 2013. Changes released under MIT license.
  */
 
 tagsReader = {
