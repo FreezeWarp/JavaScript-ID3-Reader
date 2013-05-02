@@ -6,7 +6,7 @@
  * Extended by António Afonso (antonio.afonso@opera.com), Opera Software ASA
  * Modified by António Afonso <antonio.afonso gmail.com>
  * 
- * Modified by Joseph Parsons <josephtparsons@gmail.com>, 2013. Changes released under MIT license.
+ * Modifications by Joseph Parsons <josephtparsons@gmail.com> (c) 2013, released under MIT license [http://www.opensource.org/licenses/mit-license.php].
  */
 
 tagsReader = {
@@ -116,11 +116,11 @@ tagsReader = {
     
     dataReader(url, function(data) {
       data.loadRange(fileReader._formatIDRange, function() { // preload the format identifier
-        var format = getTagReader(data),
+        var format = getFormat(data),
           formatReader;
         
-                     
-        if (typeof tagsReader.formatReader[format] !== '') {
+
+        if (typeof tagsReader.formatReader[format] !== 'object') {
           tagsReader._throwError('The format speciifed is not supported.'); 
           return false;
         }
