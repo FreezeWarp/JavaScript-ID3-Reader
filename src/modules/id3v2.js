@@ -4,7 +4,7 @@
  */
 
 (function(tagsReader) {
-  tagsReader.formatReader['id3v1'] = {
+  tagsReader.formatReader['id3v2'] = {
     _shortcuts : {
       'title'   : ['TIT2', 'TT2'],
       'artist'  : ['TPE1', 'TP1'],
